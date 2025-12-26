@@ -4,11 +4,11 @@ export type Role = 'none' | 'employee' | 'admin';
 export interface RegistrationData {
   id: string;
   name: string;
-  department: string;
-  dietary: 'None' | 'Vegetarian' | 'Halal' | 'Allergy';
-  tshirtSize: 'S' | 'M' | 'L' | 'XL' | 'XXL';
+  employeeId: string; // 工号
+  contactInfo: string; // 联系方式
+  dietary: string; // 饮食忌口
+  activityInterest: string; // 自建活动报名
   carpool: 'Need a ride' | 'Offering a ride' | 'Self-drive';
-  emergencyContact: string;
   timestamp: string;
 }
 
