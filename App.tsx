@@ -1,5 +1,5 @@
 
-// Updated App.tsx: Added conditional note input for dietary requirements.
+// Updated App.tsx: Added "Export CSV" feature to Admin Dashboard.
 import React, { useState, useEffect, useMemo } from 'react';
 import { Role, RegistrationData } from './types';
 import { COPY, MOCK_REGISTRATIONS } from './constants';
@@ -24,7 +24,8 @@ import {
   MusicalNoteIcon,
   PencilSquareIcon,
   PhoneIcon,
-  IdentificationIcon
+  IdentificationIcon,
+  ArrowDownTrayIcon
 } from '@heroicons/react/24/outline';
 
 const App: React.FC = () => {
@@ -296,7 +297,7 @@ const EmployeePortal: React.FC<{
           alt="Spring Park Grand Party" 
           className="w-full h-[480px] object-cover transition-transform duration-[20s] group-hover:scale-110"
         />
-        <div className="absolute inset-0 z-20 flex flex-col justify-between p-8 md:p-14">
+        <div className="absolute inset-0 z-20 flex flex-col justify-between p-8 md:p-14 text-balance">
           <div className="flex justify-between items-start">
             <div className="bg-white/95 backdrop-blur-md px-5 py-2.5 rounded-2xl shadow-xl flex items-center gap-3 border border-white">
               <span className="text-emerald-700 font-black tracking-widest uppercase text-[10px]">技术部集结令</span>
@@ -345,16 +346,17 @@ const RegistrationForm: React.FC<{ onCancel: () => void; onSubmit: (data: any) =
     name: initialData?.name || '',
     employeeId: initialData?.employeeId || '',
     contactInfo: initialData?.contactInfo || '',
-    dietary: initialData?.dietary.includes('备注:') ? initialData.dietary.split('备注:')[0].trim() : (initialData?.dietary || '无特殊要求'),
-    dietaryNote: initialData?.dietary.includes('备注:') ? initialData.dietary.split('备注:')[1].trim() : '',
+    dietary: initialData?.dietary?.includes(':') ? initialData.dietary.split(':')[0].trim() : (initialData?.dietary || '无特殊要求'),
+    dietaryNote: initialData?.dietary?.includes(':') ? initialData.dietary.split(':')[1].trim() : '',
     activityInterest: initialData?.activityInterest || '暂无',
     carpool: initialData?.carpool || 'Self-drive',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const finalDietary = (formData.dietary === '过敏 (请备注)' || formData.dietary === '其他 (请备注)') 
-      ? `${formData.dietary} 备注: ${formData.dietaryNote}`
+    const needsNote = formData.dietary === '过敏 (请备注)' || formData.dietary === '其他 (请备注)';
+    const finalDietary = needsNote && formData.dietaryNote.trim() 
+      ? `${formData.dietary}: ${formData.dietaryNote.trim()}`
       : formData.dietary;
 
     onSubmit({
@@ -389,7 +391,7 @@ const RegistrationForm: React.FC<{ onCancel: () => void; onSubmit: (data: any) =
                 type="text"
                 value={formData.name}
                 onChange={e => setFormData({...formData, name: e.target.value})}
-                className="w-full px-5 py-4 rounded-2xl border-2 border-slate-50 bg-slate-50 focus:bg-white focus:border-emerald-500 outline-none transition-all font-bold text-slate-800"
+                className="w-full px-5 py-4 rounded-2xl border-2 border-slate-50 bg-slate-50 focus:bg-white focus:border-emerald-500 outline-none transition-all font-bold text-slate-800 shadow-sm"
                 placeholder="填写姓名"
               />
             </div>
@@ -400,7 +402,7 @@ const RegistrationForm: React.FC<{ onCancel: () => void; onSubmit: (data: any) =
                 type="text"
                 value={formData.employeeId}
                 onChange={e => setFormData({...formData, employeeId: e.target.value})}
-                className="w-full px-5 py-4 rounded-2xl border-2 border-slate-50 bg-slate-50 focus:bg-white focus:border-emerald-500 outline-none transition-all font-bold text-slate-800"
+                className="w-full px-5 py-4 rounded-2xl border-2 border-slate-50 bg-slate-50 focus:bg-white focus:border-emerald-500 outline-none transition-all font-bold text-slate-800 shadow-sm"
                 placeholder="如 EMP1024"
               />
             </div>
@@ -414,7 +416,7 @@ const RegistrationForm: React.FC<{ onCancel: () => void; onSubmit: (data: any) =
                 type="tel"
                 value={formData.contactInfo}
                 onChange={e => setFormData({...formData, contactInfo: e.target.value})}
-                className="w-full px-5 py-4 rounded-2xl border-2 border-slate-50 bg-slate-50 focus:bg-white focus:border-emerald-500 outline-none transition-all font-bold text-slate-800"
+                className="w-full px-5 py-4 rounded-2xl border-2 border-slate-50 bg-slate-50 focus:bg-white focus:border-emerald-500 outline-none transition-all font-bold text-slate-800 shadow-sm"
                 placeholder="手机号码"
               />
             </div>
@@ -423,24 +425,25 @@ const RegistrationForm: React.FC<{ onCancel: () => void; onSubmit: (data: any) =
               <select 
                 value={formData.dietary}
                 onChange={e => setFormData({...formData, dietary: e.target.value})}
-                className="w-full px-5 py-4 rounded-2xl border-2 border-slate-50 bg-slate-50 focus:bg-white focus:border-emerald-500 outline-none transition-all font-bold text-slate-800 appearance-none bg-no-repeat bg-[right_1.25rem_center] cursor-pointer"
-                style={{backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2.5' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' /%3E%3C/svg%3E")`, backgroundSize: '1rem'}}
+                className="w-full px-5 py-4 rounded-2xl border-2 border-slate-50 bg-slate-50 focus:bg-white focus:border-emerald-500 outline-none transition-all font-bold text-slate-800 appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke-width%3D%222.5%22%20stroke%3D%22%2394a3b8%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20d%3D%22M19.5%208.25l-7.5%207.5-7.5-7.5%22%20%2F%3E%3C%2Fsvg%3E')] bg-[length:1.2rem] bg-[right_1.2rem_center] bg-no-repeat shadow-sm"
               >
                 {DIETARY_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
               </select>
-              {showNoteInput && (
-                <div className="animate-in slide-in-from-top-2 duration-300 mt-3">
-                  <textarea
-                    required
-                    value={formData.dietaryNote}
-                    onChange={e => setFormData({...formData, dietaryNote: e.target.value})}
-                    placeholder="请输入具体的忌口说明或过敏源信息..."
-                    className="w-full px-5 py-4 rounded-2xl border-2 border-emerald-100 bg-emerald-50/30 focus:bg-white focus:border-emerald-500 outline-none transition-all font-bold text-slate-800 text-sm h-24 resize-none shadow-inner"
-                  />
-                </div>
-              )}
             </div>
           </div>
+
+          {showNoteInput && (
+            <div className="animate-in slide-in-from-top-4 duration-300 space-y-2">
+              <label className="block text-[10px] uppercase font-black text-emerald-600 tracking-widest pl-1">具体备注 (PLEASE SPECIFY)</label>
+              <textarea 
+                required
+                value={formData.dietaryNote}
+                onChange={e => setFormData({...formData, dietaryNote: e.target.value})}
+                className="w-full px-5 py-4 rounded-2xl border-2 border-emerald-100 bg-emerald-50/30 focus:bg-white focus:border-emerald-500 outline-none transition-all font-bold text-slate-800 h-24 resize-none shadow-sm"
+                placeholder="请输入详细的忌口内容或过敏信息..."
+              />
+            </div>
+          )}
 
           <div className="space-y-2">
             <label className="block text-[10px] uppercase font-black text-slate-400 tracking-widest pl-1">自建活动报名 (ACTIVITY)</label>
@@ -448,7 +451,7 @@ const RegistrationForm: React.FC<{ onCancel: () => void; onSubmit: (data: any) =
               type="text"
               value={formData.activityInterest}
               onChange={e => setFormData({...formData, activityInterest: e.target.value})}
-              className="w-full px-5 py-4 rounded-2xl border-2 border-slate-50 bg-slate-50 focus:bg-white focus:border-emerald-500 outline-none transition-all font-bold text-slate-800"
+              className="w-full px-5 py-4 rounded-2xl border-2 border-slate-50 bg-slate-50 focus:bg-white focus:border-emerald-500 outline-none transition-all font-bold text-slate-800 shadow-sm"
               placeholder="飞盘、摄影、音乐、桌游等"
             />
           </div>
@@ -464,7 +467,7 @@ const RegistrationForm: React.FC<{ onCancel: () => void; onSubmit: (data: any) =
                   className={`py-5 px-2 rounded-2xl border-2 font-black uppercase tracking-widest text-[10px] transition-all flex flex-col items-center gap-2 ${
                     formData.carpool === option 
                       ? 'border-emerald-500 bg-emerald-50 text-emerald-700 shadow-[inset_0_2px_4px_rgba(16,185,129,0.1)]' 
-                      : 'border-slate-50 bg-slate-50 text-slate-400 hover:border-slate-100'
+                      : 'border-slate-50 bg-slate-50 text-slate-400 hover:border-slate-100 shadow-sm'
                   }`}
                 >
                   <div className={`w-2 h-2 rounded-full ${formData.carpool === option ? 'bg-emerald-500' : 'bg-slate-200'}`}></div>
@@ -478,7 +481,7 @@ const RegistrationForm: React.FC<{ onCancel: () => void; onSubmit: (data: any) =
             <button 
               type="button"
               onClick={onCancel}
-              className="flex-1 py-5 bg-slate-100 text-slate-500 font-black rounded-2xl hover:bg-slate-200 transition-all uppercase tracking-widest text-xs"
+              className="flex-1 py-5 bg-slate-100 text-slate-500 font-black rounded-2xl hover:bg-slate-200 transition-all uppercase tracking-widest text-xs shadow-sm"
             >
               取消 (CANCEL)
             </button>
@@ -510,13 +513,13 @@ const MyStatusView: React.FC<{registration: RegistrationData, onEdit: () => void
         <div className="flex justify-between items-start mb-10">
           <div>
             <div className="flex items-center gap-2 mb-3">
-               <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-2.5 py-1 rounded-lg">Verified Code</span>
+               <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-2.5 py-1 rounded-lg shadow-sm">Verified Code</span>
             </div>
             <h3 className="text-3xl font-black text-slate-900 tracking-tighter">Spring.log <span className="text-amber-500">2026</span></h3>
           </div>
           <button 
             onClick={onEdit}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-600 rounded-xl hover:bg-emerald-500 hover:text-white transition-all group shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-100 text-slate-600 rounded-xl hover:bg-emerald-500 hover:text-white transition-all group shadow-sm"
           >
             <PencilSquareIcon className="w-4 h-4" />
             <span className="text-xs font-black">修改报名</span>
@@ -582,6 +585,29 @@ const AdminDashboard: React.FC<{
   loading: boolean, 
   onAnalyze: () => void 
 }> = ({ data, analysis, loading, onAnalyze }) => {
+  const handleExportCSV = () => {
+    const headers = ["姓名", "工号", "联系方式", "出行方式", "饮食忌口", "活动意向", "报名时间"];
+    const rows = data.map(r => [
+      r.name,
+      r.employeeId,
+      r.contactInfo,
+      r.carpool === 'Offering a ride' ? '我有车' : r.carpool === 'Need a ride' ? '需拼车' : '自驾',
+      r.dietary,
+      r.activityInterest,
+      r.timestamp
+    ]);
+    
+    const csvContent = "\uFEFF" + [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `Spring_Gathering_Registrations_${new Date().toLocaleDateString()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-12 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
@@ -589,18 +615,27 @@ const AdminDashboard: React.FC<{
           <h1 className="text-4xl font-black text-slate-900 tracking-tight leading-none uppercase text-balance">Admin Console</h1>
           <p className="text-slate-500 font-bold mt-2">实时报名流可视化与 AI 需求建模</p>
         </div>
-        <button 
-          onClick={onAnalyze}
-          disabled={loading}
-          className="px-8 py-5 bg-slate-900 text-white font-black rounded-[1.5rem] shadow-2xl hover:bg-slate-800 transition-all flex items-center justify-center gap-3 disabled:opacity-50 text-sm uppercase tracking-widest"
-        >
-          {loading ? (
-            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-          ) : (
-            <SparklesIcon className="w-5 h-5 text-amber-400" />
-          )}
-          运行 AI 需求汇总
-        </button>
+        <div className="flex flex-wrap gap-4">
+          <button 
+            onClick={handleExportCSV}
+            className="px-6 py-5 bg-white border-2 border-slate-100 text-slate-600 font-black rounded-[1.5rem] hover:bg-slate-50 hover:border-slate-200 transition-all flex items-center justify-center gap-3 text-sm uppercase tracking-widest"
+          >
+            <ArrowDownTrayIcon className="w-5 h-5 text-emerald-500" />
+            导出数据报表
+          </button>
+          <button 
+            onClick={onAnalyze}
+            disabled={loading}
+            className="px-8 py-5 bg-slate-900 text-white font-black rounded-[1.5rem] shadow-2xl hover:bg-slate-800 transition-all flex items-center justify-center gap-3 disabled:opacity-50 text-sm uppercase tracking-widest shadow-lg"
+          >
+            {loading ? (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            ) : (
+              <SparklesIcon className="w-5 h-5 text-amber-400" />
+            )}
+            运行 AI 需求汇总
+          </button>
+        </div>
       </div>
 
       {analysis && (
