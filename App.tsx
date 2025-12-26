@@ -1,4 +1,5 @@
 
+// GatewayView and EmployeePortal updated with modern Chinese park aesthetics.
 import React, { useState, useEffect, useMemo } from 'react';
 import { Role, RegistrationData } from './types';
 import { COPY, MOCK_REGISTRATIONS } from './constants';
@@ -19,7 +20,10 @@ import {
   MapPinIcon,
   ClockIcon,
   ArrowDownTrayIcon,
-  LockClosedIcon
+  LockClosedIcon,
+  CalendarDaysIcon,
+  MapIcon,
+  CommandLineIcon
 } from '@heroicons/react/24/outline';
 
 const App: React.FC = () => {
@@ -160,78 +164,109 @@ const GatewayView: React.FC<{onSelectRole: (role: Role) => void}> = ({ onSelectR
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
-      <div className="max-w-4xl w-full">
-        <div className="text-center mb-12">
-          <div className="inline-block p-3 bg-emerald-500 rounded-2xl mb-6 shadow-xl shadow-emerald-500/20">
-            <SparklesIcon className="w-10 h-10 text-white" />
+    <div className="min-h-screen bg-slate-950 flex flex-col md:flex-row overflow-hidden relative">
+      {/* Background Decorative Blur */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-500/10 blur-[120px] rounded-full"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/10 blur-[120px] rounded-full"></div>
+      </div>
+
+      <div className="relative w-full md:w-[45%] h-[35vh] md:h-screen overflow-hidden group border-r border-white/5">
+        <img 
+          src="https://images.unsplash.com/photo-1596431268311-667793d6e522?auto=format&fit=crop&q=80&w=1200&h=1800" 
+          alt="Modern Chinese Park Entrance"
+          className="absolute inset-0 w-full h-full object-cover opacity-70 transition-transform duration-[15000ms] group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-slate-950/95 via-slate-950/40 to-transparent z-10"></div>
+        
+        <div className="absolute inset-0 z-20 p-8 md:p-14 flex flex-col justify-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-black rounded-full mb-4 md:mb-6 self-start uppercase tracking-widest backdrop-blur-md">
+             Spring.log 2026
           </div>
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter">
-            春季团建报名 <span className="text-emerald-500 font-mono text-2xl align-top">Portal</span>
-          </h1>
-          <p className="text-slate-400 text-lg">请选择您的身份入口以继续</p>
+          <h2 className="text-3xl md:text-5xl font-black text-white leading-tight tracking-tighter mb-4 drop-shadow-lg">
+            重启 <span className="text-emerald-500">线下</span><br/>
+            <span className="text-slate-200">园林式</span> 物理连接
+          </h2>
+          <p className="text-slate-400 max-w-sm text-xs md:text-sm leading-relaxed font-medium">
+            告别屏幕像素，步入现代园林。在竹林与水景之间，重构我们的团队逻辑分支。
+          </p>
         </div>
+      </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          <button 
-            onClick={() => onSelectRole('employee')}
-            className="group bg-slate-900 border border-slate-800 p-8 rounded-3xl text-left hover:border-emerald-500/50 hover:bg-slate-800/50 transition-all shadow-2xl"
-          >
-            <div className="w-14 h-14 bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-              <UserIcon className="w-8 h-8" />
-            </div>
-            <h2 className="text-2xl font-bold text-white mb-2">员工入口</h2>
-            <p className="text-slate-500 mb-6 leading-relaxed">同步个人报名状态，领取电子入场券，开启春季重构之旅。</p>
-            <div className="flex items-center text-emerald-500 font-bold gap-2">
-              进入报名分支 <ArrowRightIcon className="w-5 h-5" />
-            </div>
-          </button>
+      <div className="flex-1 flex items-center justify-center p-6 md:p-12 z-20">
+        <div className="max-w-md w-full space-y-10">
+          <div className="text-center md:text-left">
+             <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center mb-6 mx-auto md:mx-0 shadow-xl shadow-emerald-500/20">
+               <SparklesIcon className="w-7 h-7 text-white" />
+             </div>
+             <h1 className="text-2xl font-black text-white tracking-tight mb-2 uppercase">Entry Portal</h1>
+             <p className="text-slate-500 text-xs font-medium">请选择您的身份以接入报名分支</p>
+          </div>
 
-          {!isAdminMode ? (
+          <div className="grid gap-4">
             <button 
-              onClick={() => setIsAdminMode(true)}
-              className="group bg-slate-900 border border-slate-800 p-8 rounded-3xl text-left hover:border-blue-500/50 hover:bg-slate-800/50 transition-all shadow-2xl"
+              onClick={() => onSelectRole('employee')}
+              className="group relative bg-slate-900/60 border border-slate-800 hover:border-emerald-500/50 p-6 rounded-[1.5rem] text-left transition-all hover:bg-slate-800/60 shadow-2xl overflow-hidden"
             >
-              <div className="w-14 h-14 bg-blue-500/10 text-blue-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <ShieldCheckIcon className="w-8 h-8" />
-              </div>
-              <h2 className="text-2xl font-bold text-white mb-2">管理员后台</h2>
-              <p className="text-slate-500 mb-6 leading-relaxed">实时监控全量数据，通过 Gemini AI 洞察物流瓶颈与资源缺口。</p>
-              <div className="flex items-center text-blue-500 font-bold gap-2">
-                授权码登录 <ArrowRightIcon className="w-5 h-5" />
+              <div className="flex items-center gap-5 relative z-10">
+                <div className="w-12 h-12 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                  <UserIcon className="w-6 h-6" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-black text-white">员工入口</h2>
+                  <p className="text-slate-500 text-[10px] mt-0.5">同步状态，领取电子凭证</p>
+                </div>
+                <ArrowRightIcon className="w-5 h-5 text-emerald-500 ml-auto group-hover:translate-x-1 transition-transform" />
               </div>
             </button>
-          ) : (
-            <div className="bg-slate-900 border border-blue-500/50 p-8 rounded-3xl shadow-2xl animate-in zoom-in duration-300">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-white">管理员认证</h2>
-                <button onClick={() => setIsAdminMode(false)} className="text-slate-500 hover:text-white transition-colors">
-                  <ArrowLeftOnRectangleIcon className="w-6 h-6" />
-                </button>
-              </div>
-              <form onSubmit={handleAdminLogin} className="space-y-4">
-                <div className="relative">
-                  <LockClosedIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                  <input 
-                    autoFocus
-                    type="password"
-                    value={password}
-                    onChange={(e) => {setPassword(e.target.value); setError('');}}
-                    placeholder="输入管理员授权码"
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl py-4 pl-12 pr-4 text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-                  />
+
+            {!isAdminMode ? (
+              <button 
+                onClick={() => setIsAdminMode(true)}
+                className="group relative bg-slate-900/60 border border-slate-800 hover:border-blue-500/50 p-6 rounded-[1.5rem] text-left transition-all hover:bg-slate-800/60 shadow-2xl overflow-hidden"
+              >
+                <div className="flex items-center gap-5 relative z-10">
+                  <div className="w-12 h-12 bg-blue-500/10 text-blue-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                    <ShieldCheckIcon className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-black text-white">管理后台</h2>
+                    <p className="text-slate-500 text-[10px] mt-0.5">全局监控，Gemini AI 分析</p>
+                  </div>
+                  <ArrowRightIcon className="w-5 h-5 text-blue-500 ml-auto group-hover:translate-x-1 transition-transform" />
                 </div>
-                {error && <p className="text-rose-500 text-sm font-bold pl-1">{error}</p>}
-                <button 
-                  type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-600/20 transition-all"
-                >
-                  进入控制台
-                </button>
-                <p className="text-slate-600 text-center text-xs">默认授权码: admin</p>
-              </form>
-            </div>
-          )}
+              </button>
+            ) : (
+              <div className="bg-slate-900 border border-blue-500/30 p-8 rounded-[1.5rem] shadow-2xl animate-in zoom-in duration-300">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xs font-black text-white uppercase tracking-widest">Admin Auth</h2>
+                  <button onClick={() => setIsAdminMode(false)} className="text-slate-500 hover:text-white transition-colors">
+                    <ArrowLeftOnRectangleIcon className="w-5 h-5" />
+                  </button>
+                </div>
+                <form onSubmit={handleAdminLogin} className="space-y-4">
+                  <div className="relative">
+                    <LockClosedIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                    <input 
+                      autoFocus
+                      type="password"
+                      value={password}
+                      onChange={(e) => {setPassword(e.target.value); setError('');}}
+                      placeholder="授权码"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-lg py-3 pl-10 pr-4 text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm font-mono"
+                    />
+                  </div>
+                  {error && <p className="text-rose-500 text-[10px] font-black uppercase tracking-widest">{error}</p>}
+                  <button 
+                    type="submit"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-3 rounded-lg shadow-lg shadow-blue-600/20 transition-all text-xs uppercase tracking-widest"
+                  >
+                    Authorize
+                  </button>
+                </form>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -250,139 +285,88 @@ const EmployeePortal: React.FC<{onRegister: (data: any) => void}> = ({ onRegiste
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="relative rounded-3xl overflow-hidden mb-12 shadow-2xl ring-1 ring-slate-200">
+    <div className="max-w-5xl mx-auto px-4 py-8 md:py-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {/* Modern Chinese Park Style Poster */}
+      <div className="relative rounded-[2.5rem] overflow-hidden mb-10 shadow-2xl ring-1 ring-black/5 group">
+        <div className="absolute inset-0 z-10 bg-gradient-to-br from-slate-900/70 via-slate-900/30 to-transparent"></div>
         <img 
-          src="https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?auto=format&fit=crop&q=80&w=1600&h=600" 
-          alt="Banner" 
-          className="w-full h-[400px] object-cover"
+          src="https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?auto=format&fit=crop&q=80&w=2000&h=1000" 
+          alt="Modern Bamboo Park" 
+          className="w-full h-[380px] md:h-[420px] object-cover transition-transform duration-1000 group-hover:scale-110"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8 md:p-12">
-          <div className="inline-block px-3 py-1 bg-emerald-500 text-white text-xs font-bold rounded-full mb-4 self-start uppercase tracking-widest">
-            Spring 2026
+        
+        <div className="absolute inset-0 z-20 flex flex-col justify-between p-6 md:p-10">
+          <div className="flex justify-between items-start">
+            <div className="bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-xl flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div>
+              <span className="text-white font-black tracking-widest uppercase text-[9px]">Tech Retreat 2026</span>
+            </div>
+            <SparklesIcon className="w-8 h-8 text-emerald-300 opacity-60" />
           </div>
-          <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight leading-tight">
-            {COPY.theme}
-          </h1>
-          <p className="text-lg md:text-xl text-slate-200 max-w-2xl leading-relaxed">
-            {COPY.intro}
-          </p>
+
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 bg-emerald-600 text-white text-[9px] font-black rounded-full mb-4 uppercase tracking-widest shadow-lg shadow-emerald-600/30">
+              <SunIcon className="w-3 h-3" />
+              竹涧 · 溪谷
+            </div>
+            <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter leading-none drop-shadow-xl">
+              Spring.log
+              <span className="block text-emerald-400 mt-1 text-2xl md:text-4xl">重构生活 · 物理分支合入</span>
+            </h1>
+            
+            <div className="flex flex-wrap gap-6 text-white/90 font-bold mb-6">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
+                  <CalendarDaysIcon className="w-4 h-4 text-emerald-300" />
+                </div>
+                <div>
+                  <p className="text-[8px] uppercase text-white/40 tracking-widest leading-none mb-1">Schedule</p>
+                  <p className="text-xs">2026.03.20 - 21</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
+                  <MapIcon className="w-4 h-4 text-emerald-300" />
+                </div>
+                <div>
+                  <p className="text-[8px] uppercase text-white/40 tracking-widest leading-none mb-1">Base</p>
+                  <p className="text-xs font-medium">Bamboo Valley Park</p>
+                </div>
+              </div>
+            </div>
+
+            <p className="text-xs md:text-sm text-slate-200 max-w-lg leading-relaxed font-medium mb-8 border-l-2 border-emerald-500 pl-4 bg-emerald-950/20 backdrop-blur-sm py-2 rounded-r-lg">
+              {COPY.intro}
+            </p>
+            
+            <button 
+              onClick={() => setShowForm(true)}
+              className="group relative px-10 py-4 bg-white text-slate-900 font-black rounded-xl shadow-2xl hover:bg-emerald-600 hover:text-white transition-all flex items-center gap-3 text-sm"
+            >
+              立即同步报名 (Sync Now)
+              <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-8 mb-16">
+      {/* Info Cards Section - Refined for "Chinese Tech" feel */}
+      <div className="grid md:grid-cols-3 gap-6 mb-12">
         {COPY.tips.map((tip, idx) => (
-          <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center mb-4">
-              {idx === 0 ? <SunIcon className="w-6 h-6 text-emerald-600" /> : 
-               idx === 1 ? <ClipboardDocumentCheckIcon className="w-6 h-6 text-emerald-600" /> : 
-               <ExclamationTriangleIcon className="w-6 h-6 text-emerald-600" />}
+          <div key={idx} className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group">
+            <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+              {idx === 0 ? <SunIcon className="w-6 h-6" /> : 
+               idx === 1 ? <ClipboardDocumentCheckIcon className="w-6 h-6" /> : 
+               <ExclamationTriangleIcon className="w-6 h-6" />}
             </div>
-            <h3 className="font-bold text-lg mb-2 text-slate-800">{tip.title}</h3>
-            <p className="text-slate-600 text-sm leading-relaxed">{tip.content}</p>
+            <h3 className="font-black text-lg mb-2 text-slate-900 tracking-tight">{tip.title}</h3>
+            <p className="text-slate-500 text-[13px] leading-relaxed font-medium">{tip.content}</p>
           </div>
         ))}
-      </div>
-
-      <div className="flex justify-center">
-        <button 
-          onClick={() => setShowForm(true)}
-          className="group relative px-12 py-5 bg-emerald-600 text-white font-bold rounded-2xl shadow-xl shadow-emerald-500/20 hover:bg-emerald-700 transition-all flex items-center gap-2 text-xl"
-        >
-          立即同步报名 (Push to Attend)
-          <ArrowRightIcon className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-        </button>
       </div>
     </div>
   );
 };
-
-const MyStatusView: React.FC<{registration: RegistrationData}> = ({ registration }) => (
-  <div className="max-w-4xl mx-auto px-4 py-12 animate-in zoom-in duration-500">
-    <div className="text-center mb-10">
-      <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-        <CheckCircleIcon className="w-12 h-12" />
-      </div>
-      <h2 className="text-3xl font-black text-slate-900 mb-2">报名成功！</h2>
-      <p className="text-slate-500">数据已持久化至云端，请保存您的电子凭证</p>
-    </div>
-
-    {/* Ticket Card */}
-    <div className="bg-white rounded-[2rem] shadow-2xl border border-slate-200 overflow-hidden flex flex-col md:flex-row max-w-2xl mx-auto relative">
-      {/* Ticket Left Part */}
-      <div className="flex-grow p-8 md:p-10 border-b md:border-b-0 md:border-r border-dashed border-slate-300">
-        <div className="flex justify-between items-start mb-8">
-          <div>
-            <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded">Event Pass</span>
-            <h3 className="text-2xl font-black text-slate-900 mt-2">Spring.log 2026</h3>
-          </div>
-          <SparklesIcon className="w-8 h-8 text-emerald-500 opacity-20" />
-        </div>
-        
-        <div className="space-y-6">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-[10px] uppercase font-bold text-slate-400">Participant</label>
-              <p className="font-bold text-slate-800">{registration.name}</p>
-            </div>
-            <div>
-              <label className="text-[10px] uppercase font-bold text-slate-400">Department</label>
-              <p className="font-bold text-slate-800">{registration.department}</p>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-[10px] uppercase font-bold text-slate-400">Location</label>
-              <div className="flex items-center gap-1 font-bold text-slate-800">
-                <MapPinIcon className="w-3 h-3 text-emerald-500" />
-                <span>Mountain Branch</span>
-              </div>
-            </div>
-            <div>
-              <label className="text-[10px] uppercase font-bold text-slate-400">Deployment Time</label>
-              <div className="flex items-center gap-1 font-bold text-slate-800 text-xs">
-                <ClockIcon className="w-3 h-3 text-emerald-500" />
-                <span>Next Weekend 08:00</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-6 border-t border-slate-100 flex gap-6">
-            <div>
-              <label className="text-[10px] uppercase font-bold text-slate-400">Size</label>
-              <p className="font-mono text-xs font-bold text-slate-800">{registration.tshirtSize}</p>
-            </div>
-            <div>
-              <label className="text-[10px] uppercase font-bold text-slate-400">Commute</label>
-              <p className="font-mono text-xs font-bold text-slate-800">
-                {registration.carpool === 'Offering a ride' ? 'Drive-Out' : 
-                 registration.carpool === 'Need a ride' ? 'Passenger' : 'Self-Solo'}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Ticket Right Part (QR Section) */}
-      <div className="md:w-48 bg-slate-950 p-8 flex flex-col items-center justify-center text-center">
-        <div className="bg-white p-2 rounded-xl mb-4">
-          <QrCodeIcon className="w-24 h-24 text-slate-900" />
-        </div>
-        <p className="text-[10px] text-slate-500 font-mono uppercase tracking-tighter">
-          {registration.id.toUpperCase()}
-        </p>
-        <p className="text-white text-[10px] font-bold mt-4">SCAN FOR ASSETS</p>
-      </div>
-
-      {/* Aesthetic Cutouts */}
-      <div className="hidden md:block absolute top-1/2 -left-3 -translate-y-1/2 w-6 h-6 bg-slate-50 rounded-full border-r border-slate-200"></div>
-      <div className="hidden md:block absolute top-1/2 -right-3 -translate-y-1/2 w-6 h-6 bg-slate-50 rounded-full border-l border-slate-200"></div>
-    </div>
-  </div>
-);
-
-// --- New Components Fix ---
 
 const RegistrationForm: React.FC<{ onCancel: () => void; onSubmit: (data: any) => void }> = ({ onCancel, onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -400,31 +384,31 @@ const RegistrationForm: React.FC<{ onCancel: () => void; onSubmit: (data: any) =
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-12">
-      <div className="bg-white rounded-3xl p-8 shadow-xl border border-slate-200">
-        <h2 className="text-3xl font-black text-slate-900 mb-8 flex items-center gap-2">
-          <ClipboardDocumentCheckIcon className="w-8 h-8 text-emerald-500" />
-          填写报名信息
+    <div className="max-w-2xl mx-auto px-4 py-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="bg-white rounded-[2.5rem] p-8 md:p-10 shadow-2xl border border-slate-200">
+        <h2 className="text-2xl font-black text-slate-900 mb-8 flex items-center gap-3">
+          <CommandLineIcon className="w-8 h-8 text-emerald-500" />
+          初始化报名信息
         </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">姓名</label>
+              <label className="block text-[9px] uppercase font-black text-slate-400 tracking-widest mb-1.5">Participant Name</label>
               <input 
                 required
                 type="text"
                 value={formData.name}
                 onChange={e => setFormData({...formData, name: e.target.value})}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
-                placeholder="你的真实姓名"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-bold text-slate-800 text-sm"
+                placeholder="Real Name"
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">部门</label>
+              <label className="block text-[9px] uppercase font-black text-slate-400 tracking-widest mb-1.5">Department</label>
               <select 
                 value={formData.department}
                 onChange={e => setFormData({...formData, department: e.target.value})}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-bold text-slate-800 appearance-none bg-white text-sm"
               >
                 <option>前端组</option>
                 <option>后端组</option>
@@ -437,63 +421,64 @@ const RegistrationForm: React.FC<{ onCancel: () => void; onSubmit: (data: any) =
 
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">T恤尺码</label>
-              <select 
-                value={formData.tshirtSize}
-                onChange={e => setFormData({...formData, tshirtSize: e.target.value})}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
-              >
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="XXL">XXL</option>
-              </select>
+              <label className="block text-[9px] uppercase font-black text-slate-400 tracking-widest mb-1.5">Gear Size</label>
+              <div className="flex gap-1.5">
+                {['S', 'M', 'L', 'XL', 'XXL'].map(size => (
+                  <button
+                    key={size}
+                    type="button"
+                    onClick={() => setFormData({...formData, tshirtSize: size as any})}
+                    className={`flex-1 py-2.5 rounded-lg border font-black text-[10px] transition-all ${formData.tshirtSize === size ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-slate-100 bg-slate-50 text-slate-400 hover:border-slate-200'}`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">饮食禁忌</label>
+              <label className="block text-[9px] uppercase font-black text-slate-400 tracking-widest mb-1.5">Dietary Preference</label>
               <select 
                 value={formData.dietary}
-                onChange={e => setFormData({...formData, dietary: e.target.value})}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                onChange={e => setFormData({...formData, dietary: e.target.value as any})}
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-bold text-slate-800 appearance-none bg-white text-sm"
               >
-                <option value="None">无</option>
+                <option value="None">常规</option>
                 <option value="Vegetarian">素食</option>
                 <option value="Halal">清真</option>
-                <option value="Allergy">过敏</option>
+                <option value="Allergy">敏</option>
               </select>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">通勤意向</label>
-            <div className="grid grid-cols-3 gap-4">
-              {['Need a ride', 'Offering a ride', 'Self-drive'].map((option) => (
+            <label className="block text-[9px] uppercase font-black text-slate-400 tracking-widest mb-1.5">Commute Plan</label>
+            <div className="grid grid-cols-3 gap-3">
+              {(['Need a ride', 'Offering a ride', 'Self-drive'] as const).map((option) => (
                 <button
                   key={option}
                   type="button"
                   onClick={() => setFormData({...formData, carpool: option})}
-                  className={`py-3 px-2 rounded-xl border-2 text-xs font-bold transition-all ${
+                  className={`py-3 px-1 rounded-xl border font-black uppercase tracking-tighter text-[10px] transition-all ${
                     formData.carpool === option 
                       ? 'border-emerald-500 bg-emerald-50 text-emerald-700' 
-                      : 'border-slate-100 bg-slate-50 text-slate-500 hover:border-slate-200'
+                      : 'border-slate-100 bg-slate-50 text-slate-400 hover:border-slate-200'
                   }`}
                 >
-                  {option === 'Need a ride' ? '需拼车' : option === 'Offering a ride' ? '有车出车' : '自驾'}
+                  {option === 'Need a ride' ? '需拼车' : option === 'Offering a ride' ? '出车' : '自驾'}
                 </button>
               ))}
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">紧急联系方式</label>
+            <label className="block text-[9px] uppercase font-black text-slate-400 tracking-widest mb-1.5">Emergency Mobile</label>
             <input 
               required
               type="tel"
               value={formData.emergencyContact}
               onChange={e => setFormData({...formData, emergencyContact: e.target.value})}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
-              placeholder="电话号码"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-bold text-slate-800 text-sm"
+              placeholder="+86 Number"
             />
           </div>
 
@@ -501,15 +486,15 @@ const RegistrationForm: React.FC<{ onCancel: () => void; onSubmit: (data: any) =
             <button 
               type="button"
               onClick={onCancel}
-              className="flex-1 py-4 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition-all"
+              className="flex-1 py-4 bg-slate-50 text-slate-500 font-black rounded-xl hover:bg-slate-100 transition-all uppercase tracking-widest text-[10px]"
             >
-              取消
+              Cancel
             </button>
             <button 
               type="submit"
-              className="flex-1 py-4 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 shadow-lg shadow-emerald-500/20 transition-all"
+              className="flex-1 py-4 bg-emerald-600 text-white font-black rounded-xl hover:bg-emerald-700 shadow-lg shadow-emerald-600/20 transition-all uppercase tracking-widest text-[10px]"
             >
-              确认提交
+              Push Update
             </button>
           </div>
         </form>
@@ -518,6 +503,69 @@ const RegistrationForm: React.FC<{ onCancel: () => void; onSubmit: (data: any) =
   );
 };
 
+const MyStatusView: React.FC<{registration: RegistrationData}> = ({ registration }) => (
+  <div className="max-w-4xl mx-auto px-4 py-12 animate-in zoom-in duration-500">
+    <div className="text-center mb-10">
+      <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+        <CheckCircleIcon className="w-10 h-10" />
+      </div>
+      <h2 className="text-2xl font-black text-slate-900 mb-2">报名同步成功</h2>
+      <p className="text-slate-500 text-sm">已将数据推送至主分支</p>
+    </div>
+
+    <div className="bg-white rounded-[2rem] shadow-2xl border border-slate-200 overflow-hidden flex flex-col md:flex-row max-w-2xl mx-auto relative group">
+      <div className="flex-grow p-10 md:p-12 border-b md:border-b-0 md:border-r border-dashed border-slate-200">
+        <div className="flex justify-between items-start mb-8">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+               <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-1.5 py-0.5 rounded">Access Key</span>
+            </div>
+            <h3 className="text-2xl font-black text-slate-900 tracking-tighter">Spring.log <span className="text-emerald-500">2026</span></h3>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-2 gap-6 mb-8">
+          <div>
+            <label className="text-[8px] uppercase font-black text-slate-400 tracking-widest block mb-1">User</label>
+            <p className="font-black text-slate-800">{registration.name}</p>
+          </div>
+          <div>
+            <label className="text-[8px] uppercase font-black text-slate-400 tracking-widest block mb-1">Dept</label>
+            <p className="font-bold text-slate-800 text-sm">{registration.department}</p>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-2 gap-6">
+          <div>
+            <label className="text-[8px] uppercase font-black text-slate-400 tracking-widest block mb-1">Gate</label>
+            <div className="flex items-center gap-1 font-bold text-slate-800 text-sm">
+              <MapPinIcon className="w-3 h-3 text-emerald-500" />
+              <span>Bamboo Valley</span>
+            </div>
+          </div>
+          <div>
+            <label className="text-[8px] uppercase font-black text-slate-400 tracking-widest block mb-1">Schedule</label>
+            <div className="flex items-center gap-1 font-bold text-slate-800 text-[10px]">
+              <ClockIcon className="w-3 h-3 text-emerald-500" />
+              <span>Next SAT 08:00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="md:w-48 bg-slate-950 p-10 flex flex-col items-center justify-center">
+        <div className="bg-white p-2 rounded-xl mb-4 group-hover:scale-105 transition-transform duration-500">
+          <QrCodeIcon className="w-24 h-24 text-slate-950" />
+        </div>
+        <p className="text-[8px] text-emerald-500 font-black uppercase tracking-widest mb-1">Ticket Token</p>
+        <p className="text-white text-[10px] font-mono opacity-60">
+          {registration.id.slice(-6).toUpperCase()}
+        </p>
+      </div>
+    </div>
+  </div>
+);
+
 const AdminDashboard: React.FC<{ 
   data: RegistrationData[], 
   analysis: any, 
@@ -525,77 +573,73 @@ const AdminDashboard: React.FC<{
   onAnalyze: () => void 
 }> = ({ data, analysis, loading, onAnalyze }) => {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
-      <div className="flex justify-between items-end mb-8">
+    <div className="max-w-6xl mx-auto px-4 py-10 animate-in fade-in duration-500">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">管理控制台</h1>
-          <p className="text-slate-500">实时监控报名动态与物流分析</p>
+          <h1 className="text-2xl font-black text-slate-900 tracking-tight">管理后台</h1>
+          <p className="text-slate-500 text-xs">实时数据链路与 AI 趋势洞察</p>
         </div>
         <button 
           onClick={onAnalyze}
           disabled={loading}
-          className="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-all flex items-center gap-2 disabled:opacity-50"
+          className="px-6 py-3 bg-blue-600 text-white font-black rounded-xl shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50 text-xs"
         >
           {loading ? (
-            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
           ) : (
-            <SparklesIcon className="w-5 h-5" />
+            <SparklesIcon className="w-4 h-4" />
           )}
-          运行 Gemini AI 洞察
+          Gemini AI 分析
         </button>
       </div>
 
       {analysis && (
-        <div className="bg-blue-50 border border-blue-100 rounded-3xl p-8 mb-12 animate-in slide-in-from-top-4 duration-500">
-          <h2 className="text-xl font-bold text-blue-900 mb-4 flex items-center gap-2">
-            <SparklesIcon className="w-6 h-6" />
-            AI 物流建议
-          </h2>
-          <div className="prose prose-blue max-w-none">
-            <p className="text-blue-800 leading-relaxed mb-6">{analysis.summary}</p>
-            <div className="grid md:grid-cols-2 gap-4">
-              {analysis.keyInsights.map((insight: string, i: number) => (
-                <div key={i} className="flex items-start gap-3 bg-white/50 p-4 rounded-xl border border-blue-200">
-                  <div className="w-2 h-2 rounded-full bg-blue-500 mt-2 shrink-0"></div>
-                  <p className="text-sm text-blue-900 font-medium">{insight}</p>
-                </div>
-              ))}
-            </div>
+        <div className="bg-blue-50 border border-blue-100 rounded-[2rem] p-8 mb-10 shadow-sm">
+          <div className="flex items-center gap-3 mb-4 text-blue-900">
+            <SparklesIcon className="w-5 h-5 text-blue-600" />
+            <h2 className="text-lg font-black tracking-tight">AI 物流报告</h2>
+          </div>
+          <p className="text-blue-900 text-sm leading-relaxed mb-6 bg-white/40 p-4 rounded-xl border border-blue-100">{analysis.summary}</p>
+          <div className="grid md:grid-cols-3 gap-4">
+            {analysis.keyInsights.map((insight: string, i: number) => (
+              <div key={i} className="bg-white p-4 rounded-xl border border-blue-100 flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-[10px] font-black shrink-0">{i + 1}</div>
+                <p className="text-[11px] text-blue-900 font-bold leading-tight">{insight}</p>
+              </div>
+            ))}
           </div>
         </div>
       )}
 
-      <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200">
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">报名人</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">部门</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">T恤</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">通勤</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">饮食</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">时间</th>
+              <tr className="bg-slate-50/50 border-b border-slate-100">
+                <th className="px-6 py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">Name</th>
+                <th className="px-6 py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">Dept</th>
+                <th className="px-6 py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">Gear</th>
+                <th className="px-6 py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">Carpool</th>
+                <th className="px-6 py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">Diet</th>
+                <th className="px-6 py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">Time</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-50 text-xs">
               {data.map(reg => (
-                <tr key={reg.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4 font-bold text-slate-800">{reg.name}</td>
-                  <td className="px-6 py-4 text-slate-600">{reg.department}</td>
-                  <td className="px-6 py-4 font-mono text-sm">{reg.tshirtSize}</td>
+                <tr key={reg.id} className="hover:bg-slate-50/50 transition-colors">
+                  <td className="px-6 py-4 font-black text-slate-900">{reg.name}</td>
+                  <td className="px-6 py-4 text-slate-500 font-bold">{reg.department}</td>
+                  <td className="px-6 py-4 font-mono text-slate-700">{reg.tshirtSize}</td>
                   <td className="px-6 py-4">
-                    <span className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-tighter ${
-                      reg.carpool === 'Offering a ride' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' :
-                      reg.carpool === 'Need a ride' ? 'bg-amber-50 text-amber-600 border border-amber-100' : 'bg-slate-100 text-slate-600'
+                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-tighter ${
+                      reg.carpool === 'Offering a ride' ? 'bg-emerald-50 text-emerald-700' :
+                      reg.carpool === 'Need a ride' ? 'bg-amber-50 text-amber-700' : 'bg-slate-50 text-slate-500'
                     }`}>
-                      {reg.carpool === 'Offering a ride' ? '出车' : reg.carpool === 'Need a ride' ? '找拼车' : '自驾'}
+                      {reg.carpool === 'Offering a ride' ? '有车' : reg.carpool === 'Need a ride' ? '求带' : '自驾'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-slate-600 text-sm">
-                    {reg.dietary === 'None' ? '无' : reg.dietary === 'Vegetarian' ? '素食' : reg.dietary === 'Halal' ? '清真' : '过敏'}
-                  </td>
-                  <td className="px-6 py-4 text-[10px] text-slate-400 font-mono">{reg.timestamp}</td>
+                  <td className="px-6 py-4 text-slate-500">{reg.dietary === 'None' ? '常规' : '特殊'}</td>
+                  <td className="px-6 py-4 text-[9px] text-slate-300 font-mono font-bold">{reg.timestamp.split(' ')[0]}</td>
                 </tr>
               ))}
             </tbody>
