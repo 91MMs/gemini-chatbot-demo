@@ -1,5 +1,5 @@
 
-// Updated App.tsx: Added "Export CSV" feature to Admin Dashboard.
+// Updated App.tsx: Integrated LocalStorage for persistence and added multi-device sync disclaimer.
 import React, { useState, useEffect, useMemo } from 'react';
 import { Role, RegistrationData } from './types';
 import { COPY, MOCK_REGISTRATIONS } from './constants';
@@ -25,8 +25,11 @@ import {
   PencilSquareIcon,
   PhoneIcon,
   IdentificationIcon,
-  ArrowDownTrayIcon
+  ArrowDownTrayIcon,
+  InformationCircleIcon
 } from '@heroicons/react/24/outline';
+
+const STORAGE_KEY = 'spring_log_registrations';
 
 const App: React.FC = () => {
   const [role, setRole] = useState<Role>('none');
@@ -36,23 +39,41 @@ const App: React.FC = () => {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
+  // Load data from LocalStorage on mount
   useEffect(() => {
-    const lines = MOCK_REGISTRATIONS.split('\n').slice(1);
-    const parsed = lines.map((line, i) => {
-      const [name, , dietary, , carpool, contact, time] = line.split(',');
-      return {
-        id: `mock-${i}`,
-        name,
-        employeeId: `EMP${1000 + i}`,
-        contactInfo: contact || '13800000000',
-        dietary: dietary === '无' ? '无特殊要求' : dietary,
-        activityInterest: '暂无',
-        carpool: (carpool === '需拼车' ? 'Need a ride' : carpool === '有车出车' ? 'Offering a ride' : 'Self-drive') as any,
-        timestamp: time
-      };
-    });
-    setRegistrations(parsed);
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        setRegistrations(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to parse saved registrations", e);
+      }
+    } else {
+      // If no data, use mock as initial
+      const lines = MOCK_REGISTRATIONS.split('\n').slice(1);
+      const parsed = lines.map((line, i) => {
+        const [name, , dietary, , carpool, contact, time] = line.split(',');
+        return {
+          id: `mock-${i}`,
+          name,
+          employeeId: `EMP${1000 + i}`,
+          contactInfo: contact || '13800000000',
+          dietary: dietary === '无' ? '无特殊要求' : dietary,
+          activityInterest: '暂无',
+          carpool: (carpool === '需拼车' ? 'Need a ride' : carpool === '有车出车' ? 'Offering a ride' : 'Self-drive') as any,
+          timestamp: time
+        };
+      });
+      setRegistrations(parsed);
+    }
   }, []);
+
+  // Sync registrations to LocalStorage whenever they change
+  useEffect(() => {
+    if (registrations.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(registrations));
+    }
+  }, [registrations]);
 
   const handleRegister = (data: Omit<RegistrationData, 'id' | 'timestamp'>) => {
     if (currentUserId) {
@@ -184,7 +205,7 @@ const GatewayView: React.FC<{onSelectRole: (role: Role) => void}> = ({ onSelectR
         <div className="absolute inset-0 bg-gradient-to-b from-[#FFFDF7]/60 via-transparent to-[#FFFDF7]"></div>
       </div>
 
-      <div className="relative z-10 flex flex-col items-center justify-center flex-grow p-6 md:p-12">
+      <div className="relative z-10 flex flex-col items-center justify-center flex-grow p-6 md:p-12 text-balance">
         <div className="max-w-6xl w-full grid md:grid-cols-2 gap-12 items-center">
           <div className="relative rounded-[3.5rem] overflow-hidden shadow-[0_32px_80px_-16px_rgba(16,185,129,0.3)] aspect-[4/3] group ring-8 ring-white">
             <img 
@@ -193,7 +214,7 @@ const GatewayView: React.FC<{onSelectRole: (role: Role) => void}> = ({ onSelectR
               alt="Spring Park Grand Party Illustration"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/90 via-emerald-950/20 to-transparent"></div>
-            <div className="absolute inset-0 flex flex-col justify-end p-10 md:p-14 text-balance">
+            <div className="absolute inset-0 flex flex-col justify-end p-10 md:p-14">
                <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-400 text-white text-[10px] font-black rounded-full mb-4 self-start uppercase tracking-widest shadow-xl ring-2 ring-white/20">
                   <SunIcon className="w-3 h-3" />
                   春日公园大联欢!
@@ -224,7 +245,7 @@ const GatewayView: React.FC<{onSelectRole: (role: Role) => void}> = ({ onSelectR
                 </div>
                 <div>
                   <h3 className="text-xl font-black text-slate-900">员工入口</h3>
-                  <p className="text-slate-400 text-xs mt-1 font-bold">查看状态，同步报名</p>
+                  <p className="text-slate-400 text-xs mt-1 font-bold">查看状态，同步报名数据</p>
                 </div>
                 <ArrowRightIcon className="w-6 h-6 text-emerald-500 ml-auto group-hover:translate-x-1 transition-transform" />
               </button>
@@ -239,7 +260,7 @@ const GatewayView: React.FC<{onSelectRole: (role: Role) => void}> = ({ onSelectR
                   </div>
                   <div>
                     <h3 className="text-xl font-black text-slate-900">管理后台</h3>
-                    <p className="text-slate-400 text-xs mt-1 font-bold">全局洞察，资源分析</p>
+                    <p className="text-slate-400 text-xs mt-1 font-bold">全局洞察，导出数据报表</p>
                   </div>
                 </button>
               ) : (
@@ -316,7 +337,7 @@ const EmployeePortal: React.FC<{
             </h1>
             <button 
               onClick={() => setShowForm(true)}
-              className="group relative px-12 py-5 bg-white text-emerald-900 font-black rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:bg-emerald-50 transition-all flex items-center gap-4 text-xl overflow-hidden"
+              className="group relative px-12 py-5 bg-white text-emerald-900 font-black rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:bg-emerald-50 transition-all flex items-center gap-4 text-xl overflow-hidden shadow-lg"
             >
               <span>立即同步报名</span>
               <ArrowRightIcon className="w-7 h-7 group-hover:translate-x-2 transition-transform relative z-10" />
@@ -500,12 +521,12 @@ const RegistrationForm: React.FC<{ onCancel: () => void; onSubmit: (data: any) =
 
 const MyStatusView: React.FC<{registration: RegistrationData, onEdit: () => void}> = ({ registration, onEdit }) => (
   <div className="max-w-4xl mx-auto px-4 py-12 animate-in zoom-in duration-500">
-    <div className="text-center mb-10">
+    <div className="text-center mb-10 text-balance">
       <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
         <CheckCircleIcon className="w-12 h-12" />
       </div>
       <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">报名成功！</h2>
-      <p className="text-slate-500 font-bold">已同步至 2026 春日集结分支</p>
+      <p className="text-slate-500 font-bold">已同步至 2026 春日集结分支 (本地持久化)</p>
     </div>
 
     <div className="bg-white rounded-[3.5rem] shadow-[0_40px_100px_-20px_rgba(16,185,129,0.2)] border border-slate-100 overflow-hidden flex flex-col md:flex-row max-w-2xl mx-auto relative group text-balance">
@@ -618,7 +639,7 @@ const AdminDashboard: React.FC<{
         <div className="flex flex-wrap gap-4">
           <button 
             onClick={handleExportCSV}
-            className="px-6 py-5 bg-white border-2 border-slate-100 text-slate-600 font-black rounded-[1.5rem] hover:bg-slate-50 hover:border-slate-200 transition-all flex items-center justify-center gap-3 text-sm uppercase tracking-widest"
+            className="px-6 py-5 bg-white border-2 border-slate-100 text-slate-600 font-black rounded-[1.5rem] hover:bg-slate-50 hover:border-slate-200 transition-all flex items-center justify-center gap-3 text-sm uppercase tracking-widest shadow-sm"
           >
             <ArrowDownTrayIcon className="w-5 h-5 text-emerald-500" />
             导出数据报表
@@ -638,8 +659,15 @@ const AdminDashboard: React.FC<{
         </div>
       </div>
 
+      <div className="mb-8 p-4 bg-blue-50 border border-blue-100 rounded-2xl flex items-center gap-4 animate-pulse">
+        <InformationCircleIcon className="w-6 h-6 text-blue-500 shrink-0" />
+        <p className="text-sm text-blue-700 font-medium">
+          <span className="font-bold">同步说明：</span>当前版本数据存储在浏览器本地（LocalStorage）。若需实现多电脑/多端同步查看，请在生产环境接入 Firebase、Supabase 或 Vercel KV 等数据库服务。
+        </p>
+      </div>
+
       {analysis && (
-        <div className="bg-[#FFFDF7] border-2 border-amber-100 rounded-[3.5rem] p-12 mb-16 shadow-[0_40px_100px_-20px_rgba(251,191,36,0.15)] animate-in slide-in-from-top-4 duration-500">
+        <div className="bg-[#FFFDF7] border-2 border-amber-100 rounded-[3.5rem] p-12 mb-16 shadow-[0_40px_100px_-20px_rgba(251,191,36,0.15)] animate-in slide-in-from-top-4 duration-500 text-balance">
           <div className="flex items-center gap-4 mb-8 text-amber-900">
             <div className="p-3 bg-amber-100 rounded-[1.2rem]">
               <SparklesIcon className="w-7 h-7 text-amber-600" />
